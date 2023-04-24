@@ -1,0 +1,14 @@
+﻿@using EnglishTestEF.Data;
+@model EnglishTest.Models.GameViewModel
+
+@{
+    ViewBag.Title = "GameOver";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="gameover">
+    <h3>English test @Html.DisplayFor(model => model.nomJoueur), meilleur score : @Html.DisplayFor(model => model.meilleurScore) verbes</h3>
+    <a>@Html.ActionLink("Deconnexion", "Logout", "Account")</a>
+    <h2>GAME OVER</h2>
+</div>
+

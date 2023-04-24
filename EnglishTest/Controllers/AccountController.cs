@@ -53,30 +53,6 @@ namespace EnglishTest.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Login(ConnexionViewModel model)
-        {
-            // test si la validation est ok
-            if (ModelState.IsValid)
-            {
-                JoueurService joueurService = new JoueurService(new EnglishTestEntities());
-
-                Joueur joueur = joueurService.GetItem(model.email, model.password);
-
-                if (joueur != null)
-                {
-                    Session["player"] = joueur;
-                    return RedirectToAction("Informations", "Account");
-                }
-                else
-                {
-                    ViewBag.Erreur = "Login ou mot de passe incorrect";
-                }
-            }
-
-            return View();
-        }
-
         public ActionResult Logout()
         {
             // test si la validation est ok
@@ -86,28 +62,6 @@ namespace EnglishTest.Controllers
             }
 
             return RedirectToAction("Index", "Home");
-        }
-
-        public ActionResult Informations()
-        {
-            Joueur joueur = (Joueur)Session["player"];
-
-            if (joueur != null)
-            {
-                InscriptionViewModel inscriptionViewModel = new InscriptionViewModel();
-
-                VilleService villeService = new VilleService(new EnglishTestEntities());
-
-                inscriptionViewModel.Prenom = joueur.prenom;
-                inscriptionViewModel.Email = joueur.email;
-                inscriptionViewModel.Nom = joueur.nom;
-                inscriptionViewModel.NomVille = villeService.GetNomVille(joueur.idVille);
-
-                return View(inscriptionViewModel);
-            }
-            else
-                return RedirectToAction("Index", "Home");
-
         }
     }
 }

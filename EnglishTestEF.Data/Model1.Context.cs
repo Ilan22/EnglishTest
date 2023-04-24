@@ -15,8 +15,7 @@ namespace EnglishTestEF.Data
     
     public partial class EnglishTestEntities : DbContext
     {
-        public EnglishTestEntities()
-            : base("name=EnglishTestEntities")
+        public EnglishTestEntities() : base("name=EnglishTestEntities")
         {
         }
     

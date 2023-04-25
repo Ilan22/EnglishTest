@@ -17,21 +17,15 @@ namespace EnglishTestEF.Data.Services
 
         public List<Ville> GetVilles()
         {
-            using (context)
-            {
-                return context.Ville.ToList();
-            }
+            return context.Ville.ToList();
         }
 
         public String GetNomVille(int idVille)
         {
-            using (context)
-            {
-                IQueryable<Ville> ville = from Ville in context.Ville
-                                          where Ville.id == idVille
-                                          select Ville;
-                return ville.FirstOrDefault().nom;
-            }
+            IQueryable<Ville> ville = from Ville in context.Ville
+                                      where Ville.id == idVille
+                                      select Ville;
+            return ville.FirstOrDefault().nom;
         }
     }
 }

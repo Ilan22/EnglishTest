@@ -17,24 +17,27 @@ namespace EnglishTestEF.Data.Services
 
         public int GetHighestScore(int idJoueur)
         {
-            using (context)
-            {
-                IQueryable<Partie> Parties = from Partie in context.Partie
-                                             where Partie.idJoueur == idJoueur
-                                             select Partie;
-                return Parties.Max(partie => partie.score);
-            }
+            IQueryable<Partie> Parties = from Partie in context.Partie
+                                         where Partie.idJoueur == idJoueur
+                                         select Partie;
+            return Parties.Max(partie => partie.score);
         }
 
-        public Partie GetLastPartieOfJoueur(int idJoueur)
+        public void Save(Partie partie)
         {
-            using (context)
-            {
-                IQueryable<Partie> Parties = from Partie in context.Partie
-                                             where Partie.idJoueur == idJoueur
-                                             select Partie;
-                return Parties.LastOrDefault();
-            }
+            context.Partie.Add(partie);
+            context.SaveChanges();
+        }
+
+        public Partie FindPartieRecent(Joueur joueur)
+        {
+            return context.Partie.Where(x => x.idJoueur.Equals(joueur.id)).OrderByDescending(x => x.id).FirstOrDefault();
+        }
+
+        public void Update(Partie partie)
+        {
+            context.Entry(partie).State = System.Data.Entity.EntityState.Modified;
+            context.SaveChanges();
         }
     }
 }

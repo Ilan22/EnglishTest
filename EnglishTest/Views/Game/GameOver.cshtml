@@ -1,5 +1,5 @@
 ﻿@using EnglishTestEF.Data;
-@model EnglishTest.Models.GameViewModel
+@model EnglishTest.Models.GameOverViewModel
 
 @{
     ViewBag.Title = "GameOver";
@@ -9,6 +9,23 @@
 <div class="gameover">
     <h3>English test @Html.DisplayFor(model => model.nomJoueur), meilleur score : @Html.DisplayFor(model => model.meilleurScore) verbes</h3>
     <a>@Html.ActionLink("Deconnexion", "Logout", "Account")</a>
-    <h2>GAME OVER</h2>
+    @if (Model.lastPartie.score == 2)
+    {
+        <p>Félicitation vous avez tout juste !</p>
+    }
+    else
+    {
+        <h2>GAME OVER</h2>
+        <p>
+            Question @(Model.lastPartie.score+1) : Le verbe @Model.lastVerbe.traduction
+        </p>
+        <p>
+            @Model.lastVerbe.baseVerbale - @Model.lastVerbe.participePasse - @Model.lastVerbe.preterit
+        </p>
+        <p>
+            Votre score est de @Model.lastPartie.score
+        </p>
+    }
+    <button>@Html.ActionLink("Recommencer", "CreateGame", "Game")</button>
 </div>
 

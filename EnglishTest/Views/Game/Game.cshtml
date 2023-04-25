@@ -1,0 +1,38 @@
+﻿@model EnglishTest.Models.GameViewModel
+
+<h2>Game</h2>
+
+
+@*@foreach(EnglishTest.Models.GameViewModel verbe in Model.gameViewModels)
+    {
+        <p>@verbe.verbe</p>
+    }*@
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <p>@Model.verbe.baseVerbale</p>
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.reponseParticipePasser, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.reponseParticipePasser, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.reponsePreterit, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.reponsePreterit, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <input type="submit" value="Suivant" class="btn btn-default" />
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+}

@@ -176,6 +176,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Informations.cshtml" />
     <Content Include="Views\Game\GameOver.cshtml" />
+    <Content Include="Views\Game\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

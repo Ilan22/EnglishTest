@@ -26,6 +26,7 @@
                     {
                         Joueur joueur = (Joueur)Session["player"];
 
+                        <li>@Html.ActionLink("Jouer", "CreateGame", "Game")</li>
                         <li>@Html.ActionLink(joueur.prenom, "Informations", "Account")</li>
                         <li>@Html.ActionLink("Deconnexion", "Logout", "Account")</li>
                     }

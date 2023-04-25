@@ -48,6 +48,30 @@ namespace EnglishTest.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public ActionResult Login(ConnexionViewModel model)
+        {
+            // test si la validation est ok
+            if (ModelState.IsValid)
+            {
+                JoueurService joueurService = new JoueurService(new EnglishTestEntities());
+
+                Joueur joueur = joueurService.GetItem(model.email, model.password);
+
+                if (joueur != null)
+                {
+                    Session["player"] = joueur;
+                    return RedirectToAction("Informations", "Account");
+                }
+                else
+                {
+                    ViewBag.Erreur = "Login ou mot de passe incorrect";
+                }
+            }
+
+            return View();
+        }
+
         public ActionResult Login()
         {
             return View();

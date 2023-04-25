@@ -16,6 +16,11 @@ namespace EnglishTest.Models
         public string reponsePreterit { get; set; }
         public bool isOK { get; set; }
 
+        public GameViewModel()
+        {
+            
+        }
+
         public GameViewModel(Verbe verbe, string reponsePreterit = "", string reponseParticipePasser = "", bool isOk = false)
         {
             this.verbe = verbe;

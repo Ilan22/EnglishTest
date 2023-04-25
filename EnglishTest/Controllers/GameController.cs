@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,48 +13,83 @@ namespace EnglishTest.Controllers
     public class GameController : Controller
     {
         private Random random = new Random();
+        private List<Verbe> verbes = new List<Verbe>();
+        private EnglishTestEntities context = new EnglishTestEntities();
+
+
+        public ActionResult CreateGame()
+        {
+            PartieService partieService = new PartieService(context);
+            JoueurService joueurService = new JoueurService(context);
+            partieService = new PartieService(new EnglishTestEntities());
+            Partie partie = new Partie();
+            partie = new Partie();
+            //Joueur player = (Joueur)Session["player"];
+            //player = joueurService.GetItem(player.id);
+            Joueur john = joueurService.GetItem(1); // faire en sorte de recup le joueur en session
+            partie.idJoueur = john.id;
+            partieService.Save(partie);
+            return RedirectToAction("Index");
+        }
         public ActionResult Index()
         {
-            List<Verbe> verbes = new List<Verbe>();
-            GameService service = new GameService(new EnglishTestEntities());
-            PartieService partieService = new PartieService(new EnglishTestEntities());
-            QuestionService questionService = new QuestionService(new EnglishTestEntities());
-            verbes = service.GetVerbes();
-            List<Verbe> verbesRandom = new List<Verbe>();
-            verbesRandom = verbes.OrderBy(x => x.id = random.Next()).ToList();
-            GameIndexViewModel viewModel = new GameIndexViewModel();
-            viewModel.currentIndex = 0;
+            Verbe verbe = new Verbe();
+            
+            GameService service = new GameService(context);
+            PartieService partieService = new PartieService(context);
+            JoueurService joueurService = new JoueurService(context);
             Partie partie = new Partie();
-            partie.idJoueur = 1;
-            partieService.Save(partie);
+            //Joueur player = (Joueur)Session["player"];
+            //player = joueurService.GetItem(player.id);
+            Joueur john = joueurService.GetItem(1); // faire en sorte de recup le joueur en session
+            
+            partie = partieService.FindPartieRecent(john);
 
-            foreach (Verbe verbe in verbesRandom)
+            if (partie == null)
             {
-                GameViewModel gameViewModel = new GameViewModel(verbe);
-                viewModel.gameViewModels.Add(gameViewModel);
-                Question question = new Question();
-                question.idVerbe = verbe.id;
-                question.idPartie = partie.id;
-                //questionService.Save(question);
+                partieService = new PartieService(new EnglishTestEntities());
+                partie = new Partie();
+                partie.idJoueur = john.id;
+                partieService.Save(partie);
             }
+
+            verbe = service.GetAllRandom(partie);
+
+            GameViewModel viewModel = new GameViewModel(verbe);
 
             return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult Index(GameIndexViewModel model)
+        public ActionResult Index(GameViewModel model)
         {
             QuestionService questionService = new QuestionService(new EnglishTestEntities());
+            PartieService partieService = new PartieService(context);
+            JoueurService joueurService = new JoueurService(context);
+            Partie partie = new Partie();
             Question question = new Question();
-            question.idVerbe = model.CurrentItem.verbe.id;
-            question.idPartie = model.CurrentItem.verbe.id;
+            Joueur john = joueurService.GetItem(1); // faire en sorte de recup le joueur en session
+            partie = partieService.FindPartieRecent(john);
+            question.idVerbe = model.verbe.id;
+            question.idPartie = partie.id;
+            question.Verbe = model.verbe;
+            question.reponseParticipePasse = model.reponseParticipePasser;
+            question.reponsePreterit = model.reponsePreterit;
+            question.dateEnvoie = DateTime.Now;
+            question.dateReponse = DateTime.Now;
+            questionService.Save(question);
             Console.WriteLine(model);
-            if (model.CurrentItem.reponseParticipePasser == model.CurrentItem.verbe.participePasse && model.CurrentItem.reponsePreterit == model.CurrentItem.verbe.preterit) 
+            if(partie.score == 161)
             {
-                model.MoveToNextItem();
-                return View(model);
+                //redirection vers game over
             }
-            return View(model);
+            if (model.reponseParticipePasser == model.verbe.participePasse && model.reponsePreterit == model.verbe.preterit)
+            {
+                partie.score = partie.score + 1;
+                partieService.Update(partie);
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");//a modifier pour rediriger vers le game over
         }
 
         public ActionResult Logout()

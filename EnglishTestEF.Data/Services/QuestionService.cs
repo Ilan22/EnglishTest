@@ -17,11 +17,13 @@ namespace EnglishTestEF.Data.Services
 
         public void Save(Question question)
         {
-            using (context)
-            {
                 context.Question.Add(question);
                 context.SaveChanges();
-            }
+        }
+
+        public List<Question> GetQuestionsByPartie(Partie partie)
+        {
+            return context.Question.Where(x => x.idPartie == partie.id).ToList();
         }
     }
 }
